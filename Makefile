@@ -1,8 +1,9 @@
-# Variables for the sources and objects
+# Variables for the sources and directories
 SRC_DIR = ./src
 ASM_SRC_DIR = $(SRC_DIR)/asm
 CPP_SOURCES = $(addprefix $(SRC_DIR)/, main.cpp math.cpp flag.cpp increment.cpp load.cpp compare.cpp branches.cpp memory.cpp misc.cpp)
-CPP_OBJECTS = $(CPP_SOURCES:.cpp=.o)
+OBJ_DIR = ./bin/x86-64
+CPP_OBJECTS = $(addprefix $(OBJ_DIR)/, $(notdir $(CPP_SOURCES:.cpp=.o)))
 ASM_SOURCE = $(ASM_SRC_DIR)/test.asm
 
 # Output directories
@@ -29,17 +30,14 @@ run: $(MAIN_OUTPUT) $(ASM_OBJECT)
 	@echo "Running done"
 
 # Pattern rule for building C++ object files
-%.o: %.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	g++ -c $< -o $@
 
 # Targets to create output directories
-$(ASM_DIR):
-	mkdir -p $(ASM_DIR)
-
-$(X86_64_DIR):
-	mkdir -p $(X86_64_DIR)
+$(ASM_DIR) $(X86_64_DIR) $(OBJ_DIR):
+	mkdir -p $@
 
 # Clean target to remove generated files and directories
 clean:
 	rm -f $(CPP_OBJECTS) $(ASM_OBJECT) $(MAIN_OUTPUT)
-	rm -rf $(ASM_DIR) $(X86_64_DIR)
+	rm -rf $(ASM_DIR) $(X86_64_DIR) $(OBJ_DIR)
