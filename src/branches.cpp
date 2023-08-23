@@ -22,7 +22,7 @@ namespace emuops {
       cpu->pc++;
       if(cpu->flags & 0x01) {
         tick();
-        cpu->pc = rom[cpu->pc];
+        cpu->pc += rom[cpu->pc];
       }
       break;
     case IN_JMP_ABS: // Jump to absolute
@@ -30,6 +30,7 @@ namespace emuops {
       cpu->pc++;
       tick();
       cpu->pc = rom[cpu->pc] | (rom[cpu->pc + 1] << 8);
+      cpu->status_message = "JUMPING TO: " + std::to_string(cpu->pc);
       tick();
       cpu->pc++;
       break;
@@ -46,16 +47,17 @@ namespace emuops {
       cpu->pc++;
       if(!(cpu->flags & 0x01)) {
         tick();
-        cpu->pc = rom[cpu->pc];
+        cpu->pc += rom[cpu->pc];
+        cpu->status_message = "BNE TO: " + std::to_string(cpu->pc);
       }
-      cpu->status = status_t::STOPPED;
       break;
     case IN_BEQ: // Branch if equal
       tick();
       cpu->pc++;
-      if(cpu->flags & 0x01) {
+      if(( cpu->flags & 0x1 ) == 0x1) {
         tick();
-        cpu->pc = rom[cpu->pc];
+        cpu->pc += rom[cpu->pc];
+        cpu->status_message = "BEQ TO: " + std::to_string(cpu->pc);
       }
       break;
     case IN_BPL: // Branch if positive
@@ -63,7 +65,7 @@ namespace emuops {
       cpu->pc++;
       if(!(cpu->flags & 0x80)) {
         tick();
-        cpu->pc = rom[cpu->pc];
+        cpu->pc += rom[cpu->pc];
       }
       break;
     case IN_BMI: // Branch if negative
@@ -71,7 +73,7 @@ namespace emuops {
       cpu->pc++;
       if(cpu->flags & 0x80) {
         tick();
-        cpu->pc = rom[cpu->pc];
+        cpu->pc += rom[cpu->pc];
       }
       break;
     case IN_BVC: // Branch if overflow clear 
@@ -79,7 +81,7 @@ namespace emuops {
       cpu->pc++;
       if(!(cpu->flags & 0x40)) {
         tick();
-        cpu->pc = rom[cpu->pc];
+        cpu->pc += rom[cpu->pc];
       }
       break;
     }

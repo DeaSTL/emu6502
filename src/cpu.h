@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <unistd.h>
+#include <string>
 
 
 
@@ -22,6 +23,7 @@ struct cpu_t {
   uint8_t acc;
   status_t status;
   uint8_t current_instruction;
+  std::string status_message;
 };
 
 

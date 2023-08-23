@@ -15,6 +15,10 @@ namespace emuops {
         tick();
         cpu->y++;
         break;
+      case IN_TXA: // Transfer X to accumulator
+        tick();
+        cpu->acc = cpu->x;
+        break;
     }
   }
 }
