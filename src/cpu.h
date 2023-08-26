@@ -24,6 +24,8 @@ struct cpu_t {
   status_t status;
   uint8_t current_instruction;
   std::string status_message;
+  bool live_debug;
 };
 
+void cpu_print(struct cpu_t *cpu);
 

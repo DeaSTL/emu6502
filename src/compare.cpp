@@ -59,6 +59,7 @@ namespace emuops {
       case IN_CMP_ABS_X: // Compare absolute 
         tick();
         cpu->pc++;
+        cpu_print(cpu);
         if(cpu->acc == memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8) + cpu->x]) {
           tick();
           cpu->flags |= 0x01;
@@ -72,6 +73,7 @@ namespace emuops {
       case IN_CPX_IMM: // Compare X register immediate
         tick();
         cpu->pc++;
+        cpu_print(cpu);
         if(cpu->x == rom[cpu->pc]) {
           tick();
           cpu->flags |= 0x01; // Set carry flag
@@ -83,6 +85,7 @@ namespace emuops {
       case IN_CPX_ZPG: // Compare X register zero page 
         tick();
         cpu->pc++;
+        cpu_print(cpu);
         if(cpu->x == memory[rom[cpu->pc]]) {
           tick();
           cpu->flags |= 0x01;
@@ -94,6 +97,7 @@ namespace emuops {
       case IN_CPX_ABS: // Compare X register absolute 
         tick();
         cpu->pc++;
+        cpu_print(cpu);
         if(cpu->x == memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8)]) {
           tick();
           cpu->flags |= 0x01;

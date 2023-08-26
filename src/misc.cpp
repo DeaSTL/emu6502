@@ -19,6 +19,10 @@ namespace emuops {
         tick();
         cpu->acc = cpu->x;
         break;
+      // case IN_BRK:
+      //   tick();
+      //   cpu->status_message = "Break at" + std::to_string(cpu->pc);
+      //   cpu->status = status_t::STOPPED;
     }
   }
 }

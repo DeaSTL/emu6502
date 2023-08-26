@@ -17,6 +17,13 @@ namespace emuops {
         tick();
         cpu->x = rom[cpu->pc];
         break;
+      case IN_LDX_ZPG: // Load X from zero page
+        cpu->status_message = "Loading X from zero page"; 
+        tick();
+        cpu->pc++;
+        tick();
+        cpu->x = memory[rom[cpu->pc]];
+        break;
       case IN_LDY_IMM: // Load Y from immediate
         tick();
         cpu->pc++;
@@ -28,12 +35,6 @@ namespace emuops {
         cpu->pc++;
         tick();
         cpu->acc = memory[rom[cpu->pc]];
-        break;
-      case IN_LDX_ZPG: // Load X from zero page
-        tick();
-        cpu->pc++;
-        tick();
-        cpu->x = memory[rom[cpu->pc]];
         break;
       case IN_LDY_ZPG: // Load Y from zero page
         tick();

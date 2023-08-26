@@ -13,7 +13,7 @@ MAIN_OUTPUT = $(OBJ_DIR)/main
 
 # Compile C++ files
 $(MAIN_OUTPUT): $(CPP_OBJECTS)
-	g++ -g $^ -o $(MAIN_OUTPUT)
+	g++ -g -o $(MAIN_OUTPUT) $^
 	@echo "Building CPP files done"
 
 # Compile assembly file
@@ -23,15 +23,18 @@ $(ASM_OBJECT): $(ASM_SOURCE) | $(ASM_OBJ_DIR)
 
 # Target to run the program
 run: $(MAIN_OUTPUT) $(ASM_OBJECT)
-	./$(MAIN_OUTPUT) $(ASM_OBJECT) 100000
+	./$(MAIN_OUTPUT) $(ASM_OBJECT) 500
 	@echo "Running done"
 debug: $(MAIN_OUTPUT) $(ASM_OBJECT)
-	gdb $(MAIN_OUTPUT) -ex "set args $(ASM_OBJECT) 100000"
+	gdb $(MAIN_OUTPUT)
 	@echo "Debugging done"
+toAsm: $(MAIN_OUTPUT)
+	objdump -d $(MAIN_OUTPUT) > $(OBJ_DIR)/main.asm
+	@echo "Disassembling done"
 
 # Pattern rule for building C++ object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	g++ -c $< -o $@
+	g++ -g -c $< -o $@
 
 # Targets to create output directories
 $(OBJ_DIR) $(ASM_OBJ_DIR):

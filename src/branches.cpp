@@ -1,4 +1,5 @@
 #include "cpu.h"
+#include <cstdint>
 #include <stdint.h>
 #include "instructions.h"
 #include <stdio.h>
@@ -26,15 +27,16 @@ namespace emuops {
       }
       break;
     case IN_JMP_ABS: // Jump to absolute
+      cpu->status_message = "Jumping to absolute";
       tick();
       cpu->pc++;
       tick();
       cpu->pc = rom[cpu->pc] | (rom[cpu->pc + 1] << 8);
-      cpu->status_message = "JUMPING TO: " + std::to_string(cpu->pc);
       tick();
       cpu->pc++;
       break;
     case IN_JMP_IND: // Jump to indirect
+      cpu->status_message = "Jumping to indirect";
       tick();
       cpu->pc++;
       tick();
@@ -43,21 +45,23 @@ namespace emuops {
       cpu->pc++;
       break;
     case IN_BNE: // Branch if not equal
+      cpu->status_message = "Branching if not equal";
       tick();
       cpu->pc++;
       if(!(cpu->flags & 0x01)) {
         tick();
-        cpu->pc += rom[cpu->pc];
-        cpu->status_message = "BNE TO: " + std::to_string(cpu->pc);
+        cpu->pc += (int8_t)rom[cpu->pc];
+        cpu_print(cpu);
       }
       break;
     case IN_BEQ: // Branch if equal
+      cpu->status_message = "Branching if equal";
       tick();
       cpu->pc++;
       if(( cpu->flags & 0x1 ) == 0x1) {
         tick();
-        cpu->pc += rom[cpu->pc];
-        cpu->status_message = "BEQ TO: " + std::to_string(cpu->pc);
+        cpu->pc += (int8_t)rom[cpu->pc];
+        cpu_print(cpu);
       }
       break;
     case IN_BPL: // Branch if positive

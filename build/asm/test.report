@@ -1,0 +1,12 @@
+
+; ******** Source: ./src/asm/test.asm
+     1                          .index = $f;Index pointer in zero page
+     2                          
+     3                          loop:
+     4  0000 a910               LDA #$10
+     5  0002 9500               STA $00,X
+     6  0004 e8                 INX 
+     7  0005 8a                 TXA
+     8  0006 c9ff               CMP #$FF
+     9  0008 d0f6               BNE loop
+    10                          

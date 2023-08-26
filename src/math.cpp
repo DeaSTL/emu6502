@@ -84,6 +84,7 @@ namespace emuops {
       case IN_INC_ZPG_X: // Increment memory 
         tick();
         cpu->pc++;
+        cpu->status_message = "Incrementing memory";
         tick();
         memory[rom[cpu->pc] + cpu->x]++;
         break;
