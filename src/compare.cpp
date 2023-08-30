@@ -6,144 +6,154 @@
 #include <string>
 
 namespace emuops {
-  void compare_step(uint8_t* memory, uint8_t* rom, struct cpu_t *cpu, void (*tick)()){
+  int compare_step(uint8_t* memory, uint8_t* rom, cpu_t *cpu){
     switch(rom[cpu->pc]) {
       case IN_CMP_IMM: // Compare immediate
-        cpu->status_message = "CMP_IMM";
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         if(cpu->acc == rom[cpu->pc]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
+        return 1;
         break;
       case IN_CMP_ZPG: // Compare zero page
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         if(cpu->acc == memory[rom[cpu->pc]]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
+        return 1;
         break;
       case IN_CMP_ZPG_X: // Compare zero page
-        cpu->status_message = "CMP_ZPG_X";
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         if(cpu->acc == memory[rom[cpu->pc] + cpu->x]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
+        return 1;
         break;
       case IN_CMP_ABS: // Compare absolute
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         if(cpu->acc == memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8)]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
+        return 1;
         break;
       case IN_CMP_ABS_X: // Compare absolute 
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         cpu_print(cpu);
         if(cpu->acc == memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8) + cpu->x]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
+        return 1;
         break;
       case IN_CPX_IMM: // Compare X register immediate
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         cpu_print(cpu);
         if(cpu->x == rom[cpu->pc]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01; // Set carry flag
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe; // Clear carry flag
         }
+        return 1;
         break;
       case IN_CPX_ZPG: // Compare X register zero page 
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         cpu_print(cpu);
         if(cpu->x == memory[rom[cpu->pc]]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
+        return 1;
         break;
       case IN_CPX_ABS: // Compare X register absolute 
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         cpu_print(cpu);
         if(cpu->x == memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8)]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
+        return 1;
         break;
       case IN_CPY_IMM: // Compare Y register immediate 
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         if(cpu->y == rom[cpu->pc]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
+        return 1;
         break;
       case IN_CPY_ZPG: // Compare Y register zero page 
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         if(cpu->y == memory[rom[cpu->pc]]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
+        return 1;
         break;
       case IN_CPY_ABS: // Compare Y register absolute 
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
         if(cpu->y == memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8)]) {
-          tick();
+          cpu_tick(cpu);
           cpu->flags |= 0x01;
         } else {
-          tick();
+          cpu_tick(cpu);
           cpu->flags &= 0xfe;
         }
-        tick();
+        cpu_tick(cpu);
         cpu->pc++;
+        return 1;
         break;
     }
+    return 0;
 
   }
 }

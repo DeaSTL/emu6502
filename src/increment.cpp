@@ -3,19 +3,24 @@
 #include "cpu.h"
 
 namespace emuops {
-  void increment_step(uint8_t *memory[], uint8_t *rom[], struct cpu_t *cpu, void (*tick)()){
+  int increment_step(uint8_t *memory[], uint8_t *rom[], cpu_t *cpu){
     switch(*rom[cpu->pc]) {
       case IN_NOP: // No operation
-        tick();
+        cpu_tick(cpu);
+        return 1;
         break;
       case IN_BRK: // Break
-        tick();
+        cpu_tick(cpu);
         cpu->status = status_t::STOPPED;
+        return 1;
+        break;
       case IN_TAY: // Transfer accumulator to Y
-        tick();
+        cpu_tick(cpu);
         cpu->y = cpu->acc;
+        return 1;
         break;
     }
+    return 0;
     
   }
 }

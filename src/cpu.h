@@ -12,20 +12,27 @@ typedef enum  {
   ERROR = 0x03,
 } status_t;
 
-
-
-struct cpu_t {
-  uint8_t x;
-  uint8_t y;
-  uint8_t sp;
-  uint16_t pc;
-  uint8_t flags;
-  uint8_t acc;
+typedef struct cpu {
+  uint8_t x = 0x00;
+  uint8_t y = 0x00;
+  uint8_t sp = 0x00;
+  uint16_t pc = 0x0000;
+  uint8_t flags = 0x00;
+  uint8_t acc = 0x00;
   status_t status;
   uint8_t current_instruction;
   std::string status_message;
-  bool live_debug;
-};
+  bool live_debug = true;
+  uint16_t clock;
+  uint32_t clock_speed;
+  uint8_t* memory;
+  uint8_t* rom;
+} cpu_t;
 
-void cpu_print(struct cpu_t *cpu);
 
+
+void cpu_destory(cpu_t* cpu);
+void cpu_print(cpu_t *cpu);
+void cpu_tick(cpu_t *cpu);
+void cpu_step(cpu_t *cpu);
+void cpu_init(cpu_t* cpu);

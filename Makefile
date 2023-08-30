@@ -13,7 +13,7 @@ MAIN_OUTPUT = $(OBJ_DIR)/main
 
 # Compile C++ files
 $(MAIN_OUTPUT): $(CPP_OBJECTS)
-	g++ -g -o $(MAIN_OUTPUT) $^
+	g++ -lSDL2 -lSDL2_image -g -o $(MAIN_OUTPUT) $^
 	@echo "Building CPP files done"
 
 # Compile assembly file
@@ -23,7 +23,7 @@ $(ASM_OBJECT): $(ASM_SOURCE) | $(ASM_OBJ_DIR)
 
 # Target to run the program
 run: $(MAIN_OUTPUT) $(ASM_OBJECT)
-	./$(MAIN_OUTPUT) $(ASM_OBJECT) 500
+	./$(MAIN_OUTPUT) $(ASM_OBJECT) 5
 	@echo "Running done"
 debug: $(MAIN_OUTPUT) $(ASM_OBJECT)
 	gdb $(MAIN_OUTPUT)
@@ -34,7 +34,7 @@ toAsm: $(MAIN_OUTPUT)
 
 # Pattern rule for building C++ object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	g++ -g -c $< -o $@
+	g++ -lSDL2 -lSDL2_image -g -c $< -o $@
 
 # Targets to create output directories
 $(OBJ_DIR) $(ASM_OBJ_DIR):

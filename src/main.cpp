@@ -1,4 +1,3 @@
-#include "instructions.h"
 #include <cstdint>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,65 +6,57 @@
 #include <unistd.h>
 #include "cpu.h"
 #include "opsteps.h"
+#include "render.h"
+#include <thread>
+#include <chrono>
 
 
-uint16_t clock = 0;
-uint32_t clock_speed = 500000;
 bool live_debug = true;
+cpu_t *cpu;
+std::thread render_thread;
+std::thread event_thread;
 
-
-void tick() {
-  clock++;
-  usleep(clock_speed);
-}
-struct cpu_t *cpu;
-uint8_t memory[0xffff];
-uint8_t rom[0xffff];
-
-
-
-int step() {
-  
-
-  emuops::math_step(memory, rom, cpu, tick); 
-  emuops::compare_step(memory, rom, cpu, tick);
-  emuops::branch_step(memory, rom, cpu, tick);
-  emuops::load_step(memory, rom, cpu, tick);
-  emuops::flag_step(memory, rom, cpu, tick);
-  emuops::misc_step(memory, rom, cpu, tick);
-  emuops::memory_step(memory, rom, cpu, tick);
-
-  tick();
-  cpu->pc++;
-  if(cpu->pc >= 0xffff) {
-    printf("PC out of bounds\n");
-    return 1;
-  }
-  return 0;
+void dumpMemoryToFile(uint8_t* memory, int size, std::string filename){
+  FILE* file = fopen(filename.c_str(), "wb");
+  fwrite(memory, 1, size, file);
+  fclose(file);
 }
 
 int main(int argc, char *argv[])
 {
+  printf("Initializing CPU\n");
+  cpu = (cpu_t*)malloc(sizeof(cpu_t));
+  printf("Initializing CPU Memory\n");
+  cpu_init(cpu);
+  printf("Starting CPU\n");
   if(argc < 2) {
     printf("Usage: %s <rom>\n", argv[0]);
     printf("No rom specified, reverting to example rom\n");
   }
-  if(argc == 3) {
-    clock_speed = atoi(argv[2]);
-  }
   std::string example_rom = std::string("../asm/test.o");
   FILE *rom_file = fopen(argv[1], "rb");
+  printf("Opening rom file\n");
   if(!rom_file) {
     printf("Could not open rom file\n");
     return 1;
   }
-  fread(rom, 1, 0xffff, rom_file);
-  cpu = (struct cpu_t *)malloc(sizeof(struct cpu_t));
-  cpu->live_debug = live_debug;
-  
+  fread(cpu->rom, 1, 0xffff, rom_file);
 
+  printf("Initializing Graphics\n");
+  render::init(cpu);
+  
+  cpu->live_debug = live_debug;
   while (cpu->status == RUNNING){
-    step();
+    auto start = std::chrono::high_resolution_clock::now();
+    render::eventLoop();
+    for(int i = 0; i < 10000; i++){
+      cpu_tick(cpu);
+      cpu_step(cpu);
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    int delta = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    render::updatePallet();
+    render::draw();
     if(cpu->live_debug){
       printf("Acc: 0x%x\n", cpu->acc);
       printf("Program Counter: 0x%x\n", cpu->pc);
@@ -74,27 +65,29 @@ int main(int argc, char *argv[])
       printf("Y: 0x%x\n", cpu->y);
       printf("Status: %d\n", cpu->status);
       printf("Flags: %b\n", cpu->flags);
-      printf("Clock: %d\n", clock);
+      printf("Delta: %d microseconds\n",delta);
+      printf("Clock Cycles Per Second: %d\n", 1000000/delta);
       //Clear line line below before printing
       printf("\033[2K");
-      printf("Status Message: %s\n", cpu->status_message.c_str());
+      //printf("Status Message: %s\n", cpu->status_message.c_str());
       printf("Current Instruction: 0x%x\n", cpu->current_instruction);
-      for(int i = 0; i < 64; i++) {
-        printf("0x%x ", memory[i]);
-        if(i % 8 == 7 && i != 0) {
-          printf("\n");
-        }
-      }
-      printf("\n");
-      if(cpu->status == RUNNING) {
-        for(int i = 0; i < 19; i++) {
+      printf("Clock: %d\n", cpu->clock);
+      // if(cpu->clock > 0x1000){
+      //   dumpMemoryToFile(cpu->memory, 0xffff, "memory_dump.bin");
+      //   printf("Dumped memory to memory_dump.bin\n");
+      //   cpu->status = status_t::STOPPED;
+      // }
+      if(cpu->status == status_t::RUNNING) {
+        for(int i = 0; i < 11; i++) {
           printf("\033[A");
         }
       }
     }
+    cpu_tick(cpu);
   }
   printf("Exited with status: %x\n", cpu->status);
-  free(cpu);
+  render::destroy();
+  cpu_destory(cpu);
   return 0;
 }
 

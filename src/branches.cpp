@@ -6,88 +6,92 @@
 
 
 namespace emuops {
-  void branch_step(uint8_t* memory, uint8_t* rom, struct cpu_t *cpu, void (*tick)()) {
+  int branch_step(uint8_t* memory, uint8_t* rom, cpu_t *cpu) {
     switch(rom[cpu->pc]){
     case IN_JSR: // Jump to subroutine
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
-      tick();
+      cpu_tick(cpu);
       memory[cpu->sp] = cpu->pc;
-      tick();
+      cpu_tick(cpu);
       cpu->sp--;
-      tick();
+      cpu_tick(cpu);
       cpu->pc = rom[cpu->pc];
+      return 1;
       break;
     case IN_BCS: // Branch if carry set
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
       if(cpu->flags & 0x01) {
-        tick();
+        cpu_tick(cpu);
         cpu->pc += rom[cpu->pc];
       }
+      return 1;
       break;
     case IN_JMP_ABS: // Jump to absolute
-      cpu->status_message = "Jumping to absolute";
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
-      tick();
+      cpu_tick(cpu);
       cpu->pc = rom[cpu->pc] | (rom[cpu->pc + 1] << 8);
-      tick();
-      cpu->pc++;
+      cpu_tick(cpu);
+      return 1;
       break;
     case IN_JMP_IND: // Jump to indirect
-      cpu->status_message = "Jumping to indirect";
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
-      tick();
+      cpu_tick(cpu);
       cpu->pc = memory[cpu->pc] | (memory[cpu->pc + 1] << 8);
-      tick();
-      cpu->pc++;
+      cpu_tick(cpu);
+      return 1;
       break;
     case IN_BNE: // Branch if not equal
-      cpu->status_message = "Branching if not equal";
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
       if(!(cpu->flags & 0x01)) {
-        tick();
+        cpu_tick(cpu);
         cpu->pc += (int8_t)rom[cpu->pc];
         cpu_print(cpu);
       }
+      return 1;
       break;
     case IN_BEQ: // Branch if equal
-      cpu->status_message = "Branching if equal";
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
       if(( cpu->flags & 0x1 ) == 0x1) {
-        tick();
+        cpu_tick(cpu);
         cpu->pc += (int8_t)rom[cpu->pc];
         cpu_print(cpu);
       }
+      return 1;
       break;
     case IN_BPL: // Branch if positive
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
       if(!(cpu->flags & 0x80)) {
-        tick();
+        cpu_tick(cpu);
         cpu->pc += rom[cpu->pc];
       }
+      return 1;
       break;
     case IN_BMI: // Branch if negative
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
       if(cpu->flags & 0x80) {
-        tick();
+        cpu_tick(cpu);
         cpu->pc += rom[cpu->pc];
       }
+      return 1;
       break;
     case IN_BVC: // Branch if overflow clear 
-      tick();
+      cpu_tick(cpu);
       cpu->pc++;
       if(!(cpu->flags & 0x40)) {
-        tick();
+        cpu_tick(cpu);
         cpu->pc += rom[cpu->pc];
       }
+      return 1;
       break;
     }
+    return 0;
   }
 }
