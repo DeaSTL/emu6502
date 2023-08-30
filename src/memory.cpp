@@ -25,7 +25,7 @@ namespace emuops {
       case IN_STA_ABS_X: // Store accumulator in absolute
         cpu->pc++;
         cpu_tick(cpu);
-        memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8) + cpu->x] = cpu->acc;
+        memory[(rom[cpu->pc] | (rom[cpu->pc + 1] << 8)) + cpu->x] = cpu->acc;
         cpu_tick(cpu);
         cpu->pc++;
         return 1;

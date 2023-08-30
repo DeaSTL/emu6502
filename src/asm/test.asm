@@ -1,5 +1,9 @@
-.pxlstart = $1000;
-.palstart = .pxlstart + ((64 * 64) / 2);
+.pxlstart1 = $1000;
+.pxlstart2 = .pxlstart1 + 0xff;
+.pxlstart3 = .pxlstart2 + 0xff;
+.pxlstart4 = .pxlstart3 + 0xff;
+
+.palstart = .pxlstart1 + ((64 * 64) / 2);
 
 
 
@@ -130,21 +134,29 @@ STA .palstart + 46
 LDA #255
 STA .palstart + 47
 
+
+
 loop:
 TYA
-STA .pxlstart,X
+STA .pxlstart1,X
+STA .pxlstart1 + 255,X
+STA .pxlstart1 + 512,X
+STA .pxlstart1 + 767,X
+STA .pxlstart1 + 1024,X
+STA .pxlstart1 + 1279,X
+STA .pxlstart1 + 1536,X
+STA .pxlstart1 + 1791,X
 INX
 INY
 TYA
-CMP #$F
+CMP #$6
 BEQ reset
 TXA
 CMP #$FF
 BNE loop
 
 reset:
-LDA #0
-TAY
+LDY #0
 JMP loop
 
 

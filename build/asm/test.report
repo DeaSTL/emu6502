@@ -1,153 +1,165 @@
 
 ; ******** Source: ./src/asm/test.asm
-     1                          .pxlstart = $1000;
-     2                          .palstart = .pxlstart + ((64 * 64) / 2);
-     3                          
-     4                          
+     1                          .pxlstart1 = $1000;
+     2                          .pxlstart2 = .pxlstart1 + 0xff;
+     3                          .pxlstart3 = .pxlstart2 + 0xff;
+     4                          .pxlstart4 = .pxlstart3 + 0xff;
      5                          
-     6                          ;Black #0
-     7  0000 a900               LDA #0 ;R
-     8  0002 8d0018             STA .palstart
-     9  0005 a900               LDA #0 ;G
-    10  0007 8d0118             STA .palstart + 1
-    11  000a a900               LDA #0 ;B
-    12  000c 8d0218             STA .palstart + 2
-    13                          
-    14                          ;Grey #1 
-    15  000f a99d               LDA #157
-    16  0011 8d0318             STA .palstart + 3
-    17  0014 a99d               LDA #157
-    18  0016 8d0418             STA .palstart + 4
-    19  0019 a99d               LDA #157
-    20  001b 8d0518             STA .palstart + 5
-    21                          
-    22                          ;White #2
-    23  001e a9ff               LDA #255
-    24  0020 8d0618             STA .palstart + 6
-    25  0023 a9ff               LDA #255
-    26  0025 8d0718             STA .palstart + 7
-    27  0028 a9ff               LDA #255
-    28  002a 8d0818             STA .palstart + 8
-    29                          
-    30                          ;Red #3
-    31  002d a9ff               LDA #255
-    32  002f 8d0918             STA .palstart + 9
-    33  0032 a900               LDA #0
-    34  0034 8d0a18             STA .palstart + 10
-    35  0037 a900               LDA #0
-    36  0039 8d0b18             STA .palstart + 11
-    37                          
-    38                          ;Magenta #4
-    39  003c a9ff               LDA #255
-    40  003e 8d0c18             STA .palstart + 12
-    41  0041 a900               LDA #0
-    42  0043 8d0d18             STA .palstart + 13
-    43  0046 a9ff               LDA #255
-    44  0048 8d0e18             STA .palstart + 14
-    45                          
-    46                          ;Brown #5
-    47  004b a94d               LDA #77
-    48  004d 8d0f18             STA .palstart + 15
-    49  0050 a93e               LDA #62
-    50  0052 8d1018             STA .palstart + 16
-    51  0055 a917               LDA #23
-    52  0057 8d1118             STA .palstart + 17
-    53                          
-    54                          ;Orange #6
-    55  005a a9ff               LDA #255
-    56  005c 8d1218             STA .palstart + 18
-    57  005f a980               LDA #128
-    58  0061 8d1318             STA .palstart + 19
-    59  0064 a900               LDA #0
-    60  0066 8d1418             STA .palstart + 20
-    61                          
-    62                          ;Yellow #7
-    63  0069 a9ff               LDA #255
-    64  006b 8d1518             STA .palstart + 21
-    65  006e a9ff               LDA #255
-    66  0070 8d1618             STA .palstart + 22
-    67  0073 a900               LDA #0
-    68                          
-    69                          ;Dark Green #8
-    70  0075 a900               LDA #0
-    71  0077 8d1818             STA .palstart + 24
-    72  007a a980               LDA #128
-    73  007c 8d1918             STA .palstart + 25
-    74  007f a900               LDA #0
-    75  0081 8d1a18             STA .palstart + 26
-    76                          
-    77                          ;Green #9
-    78  0084 a900               LDA #0
-    79  0086 8d1b18             STA .palstart + 27
-    80  0089 a9ff               LDA #255
-    81  008b 8d1c18             STA .palstart + 28
-    82  008e a900               LDA #0
-    83  0090 8d1d18             STA .palstart + 29
-    84                          
-    85                          ;Cyan #10
-    86  0093 a900               LDA #0
-    87  0095 8d1e18             STA .palstart + 30
-    88  0098 a9ff               LDA #255
-    89  009a 8d1f18             STA .palstart + 31
-    90  009d a9ff               LDA #255
-    91  009f 8d2018             STA .palstart + 32
-    92                          
-    93                          ;Blue #11
-    94  00a2 a900               LDA #0
-    95  00a4 8d2118             STA .palstart + 33
-    96  00a7 a900               LDA #0
-    97  00a9 8d2218             STA .palstart + 34
-    98  00ac a9ff               LDA #255
-    99  00ae 8d2318             STA .palstart + 35
-   100                          
-   101                          ;Purple #12
-   102  00b1 a980               LDA #128
-   103  00b3 8d2418             STA .palstart + 36
-   104  00b6 a900               LDA #0
-   105  00b8 8d2518             STA .palstart + 37
-   106  00bb a9ff               LDA #255
-   107  00bd 8d2618             STA .palstart + 38
-   108                          
-   109                          ;Pink #13
-   110  00c0 a9ff               LDA #255
-   111  00c2 8d2718             STA .palstart + 39
-   112  00c5 a900               LDA #0
-   113  00c7 8d2818             STA .palstart + 40
-   114  00ca a980               LDA #128
-   115  00cc 8d2918             STA .palstart + 41
-   116                          
-   117                          ;Light Grey #14
-   118  00cf a9c0               LDA #192
-   119  00d1 8d2a18             STA .palstart + 42
-   120  00d4 a9c0               LDA #192
-   121  00d6 8d2b18             STA .palstart + 43
-   122  00d9 a9c0               LDA #192
-   123  00db 8d2c18             STA .palstart + 44
-   124                          
-   125                          ;Light Blue #15
-   126  00de a980               LDA #128
-   127  00e0 8d2d18             STA .palstart + 45
-   128  00e3 a980               LDA #128
-   129  00e5 8d2e18             STA .palstart + 46
-   130  00e8 a9ff               LDA #255
-   131  00ea 8d2f18             STA .palstart + 47
-   132                          
-   133                          loop:
-   134  00ed 98                 TYA
-   135  00ee 9d0010             STA .pxlstart,X
-   136  00f1 e8                 INX
-   137  00f2 c8                 INY
-   138  00f3 98                 TYA
-   139  00f4 c90f               CMP #$F
-   140  00f6 f005               BEQ reset
-   141  00f8 8a                 TXA
-   142  00f9 c9ff               CMP #$FF
-   143  00fb d0f0               BNE loop
-   144                          
-   145                          reset:
-   146  00fd a900               LDA #0
-   147  00ff a8                 TAY
-   148  0100 4ced00             JMP loop
-   149                          
-   150                          
-   151                          
+     6                          .palstart = .pxlstart1 + ((64 * 64) / 2);
+     7                          
+     8                          
+     9                          
+    10                          ;Black #0
+    11  0000 a900               LDA #0 ;R
+    12  0002 8d0018             STA .palstart
+    13  0005 a900               LDA #0 ;G
+    14  0007 8d0118             STA .palstart + 1
+    15  000a a900               LDA #0 ;B
+    16  000c 8d0218             STA .palstart + 2
+    17                          
+    18                          ;Grey #1 
+    19  000f a99d               LDA #157
+    20  0011 8d0318             STA .palstart + 3
+    21  0014 a99d               LDA #157
+    22  0016 8d0418             STA .palstart + 4
+    23  0019 a99d               LDA #157
+    24  001b 8d0518             STA .palstart + 5
+    25                          
+    26                          ;White #2
+    27  001e a9ff               LDA #255
+    28  0020 8d0618             STA .palstart + 6
+    29  0023 a9ff               LDA #255
+    30  0025 8d0718             STA .palstart + 7
+    31  0028 a9ff               LDA #255
+    32  002a 8d0818             STA .palstart + 8
+    33                          
+    34                          ;Red #3
+    35  002d a9ff               LDA #255
+    36  002f 8d0918             STA .palstart + 9
+    37  0032 a900               LDA #0
+    38  0034 8d0a18             STA .palstart + 10
+    39  0037 a900               LDA #0
+    40  0039 8d0b18             STA .palstart + 11
+    41                          
+    42                          ;Magenta #4
+    43  003c a9ff               LDA #255
+    44  003e 8d0c18             STA .palstart + 12
+    45  0041 a900               LDA #0
+    46  0043 8d0d18             STA .palstart + 13
+    47  0046 a9ff               LDA #255
+    48  0048 8d0e18             STA .palstart + 14
+    49                          
+    50                          ;Brown #5
+    51  004b a94d               LDA #77
+    52  004d 8d0f18             STA .palstart + 15
+    53  0050 a93e               LDA #62
+    54  0052 8d1018             STA .palstart + 16
+    55  0055 a917               LDA #23
+    56  0057 8d1118             STA .palstart + 17
+    57                          
+    58                          ;Orange #6
+    59  005a a9ff               LDA #255
+    60  005c 8d1218             STA .palstart + 18
+    61  005f a980               LDA #128
+    62  0061 8d1318             STA .palstart + 19
+    63  0064 a900               LDA #0
+    64  0066 8d1418             STA .palstart + 20
+    65                          
+    66                          ;Yellow #7
+    67  0069 a9ff               LDA #255
+    68  006b 8d1518             STA .palstart + 21
+    69  006e a9ff               LDA #255
+    70  0070 8d1618             STA .palstart + 22
+    71  0073 a900               LDA #0
+    72                          
+    73                          ;Dark Green #8
+    74  0075 a900               LDA #0
+    75  0077 8d1818             STA .palstart + 24
+    76  007a a980               LDA #128
+    77  007c 8d1918             STA .palstart + 25
+    78  007f a900               LDA #0
+    79  0081 8d1a18             STA .palstart + 26
+    80                          
+    81                          ;Green #9
+    82  0084 a900               LDA #0
+    83  0086 8d1b18             STA .palstart + 27
+    84  0089 a9ff               LDA #255
+    85  008b 8d1c18             STA .palstart + 28
+    86  008e a900               LDA #0
+    87  0090 8d1d18             STA .palstart + 29
+    88                          
+    89                          ;Cyan #10
+    90  0093 a900               LDA #0
+    91  0095 8d1e18             STA .palstart + 30
+    92  0098 a9ff               LDA #255
+    93  009a 8d1f18             STA .palstart + 31
+    94  009d a9ff               LDA #255
+    95  009f 8d2018             STA .palstart + 32
+    96                          
+    97                          ;Blue #11
+    98  00a2 a900               LDA #0
+    99  00a4 8d2118             STA .palstart + 33
+   100  00a7 a900               LDA #0
+   101  00a9 8d2218             STA .palstart + 34
+   102  00ac a9ff               LDA #255
+   103  00ae 8d2318             STA .palstart + 35
+   104                          
+   105                          ;Purple #12
+   106  00b1 a980               LDA #128
+   107  00b3 8d2418             STA .palstart + 36
+   108  00b6 a900               LDA #0
+   109  00b8 8d2518             STA .palstart + 37
+   110  00bb a9ff               LDA #255
+   111  00bd 8d2618             STA .palstart + 38
+   112                          
+   113                          ;Pink #13
+   114  00c0 a9ff               LDA #255
+   115  00c2 8d2718             STA .palstart + 39
+   116  00c5 a900               LDA #0
+   117  00c7 8d2818             STA .palstart + 40
+   118  00ca a980               LDA #128
+   119  00cc 8d2918             STA .palstart + 41
+   120                          
+   121                          ;Light Grey #14
+   122  00cf a9c0               LDA #192
+   123  00d1 8d2a18             STA .palstart + 42
+   124  00d4 a9c0               LDA #192
+   125  00d6 8d2b18             STA .palstart + 43
+   126  00d9 a9c0               LDA #192
+   127  00db 8d2c18             STA .palstart + 44
+   128                          
+   129                          ;Light Blue #15
+   130  00de a980               LDA #128
+   131  00e0 8d2d18             STA .palstart + 45
+   132  00e3 a980               LDA #128
+   133  00e5 8d2e18             STA .palstart + 46
+   134  00e8 a9ff               LDA #255
+   135  00ea 8d2f18             STA .palstart + 47
+   136                          
+   137                          
+   138                          
+   139                          loop:
+   140  00ed 98                 TYA
+   141  00ee 9d0010             STA .pxlstart1,X
+   142  00f1 9dff10             STA .pxlstart1 + 255,X
+   143  00f4 9d0012             STA .pxlstart1 + 512,X
+   144  00f7 9dff12             STA .pxlstart1 + 767,X
+   145  00fa 9d0014             STA .pxlstart1 + 1024,X
+   146  00fd 9dff14             STA .pxlstart1 + 1279,X
+   147  0100 9d0016             STA .pxlstart1 + 1536,X
+   148  0103 9dff16             STA .pxlstart1 + 1791,X
+   149  0106 e8                 INX
+   150  0107 c8                 INY
+   151  0108 98                 TYA
+   152  0109 c906               CMP #$6
+   153  010b f005               BEQ reset
+   154  010d 8a                 TXA
+   155  010e c9ff               CMP #$FF
+   156  0110 d0db               BNE loop
+   157                          
+   158                          reset:
+   159  0112 a000               LDY #0
+   160  0114 4ced00             JMP loop
+   161                          
+   162                          
+   163                          

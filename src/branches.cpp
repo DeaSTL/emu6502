@@ -9,14 +9,22 @@ namespace emuops {
   int branch_step(uint8_t* memory, uint8_t* rom, cpu_t *cpu) {
     switch(rom[cpu->pc]){
     case IN_JSR: // Jump to subroutine
-      cpu_tick(cpu);
       cpu->pc++;
       cpu_tick(cpu);
-      memory[cpu->sp] = cpu->pc;
+      cpu->memory[cpu->sp | 0x100] = cpu->pc+2 & 0xFF;
       cpu_tick(cpu);
       cpu->sp--;
       cpu_tick(cpu);
-      cpu->pc = rom[cpu->pc];
+      cpu->pc = cpu->rom[cpu->pc] | (cpu->rom[cpu->pc + 1] << 8);
+      return 1;
+      break;
+    case IN_RTS: // Return from subroutine
+      cpu_tick(cpu);
+      cpu->pc++;
+      cpu_tick(cpu);
+      cpu->sp++;
+      cpu_tick(cpu);
+      cpu->pc = cpu->memory[cpu->sp | 0x100];
       return 1;
       break;
     case IN_BCS: // Branch if carry set

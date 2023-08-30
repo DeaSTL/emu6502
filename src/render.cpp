@@ -71,7 +71,7 @@ namespace render{
     pixels = (Uint8* )malloc(pixel_width * pixel_height * 3);
     cpu = _cpu;
     SDL_Init(SDL_INIT_VIDEO);
-    window = SDL_CreateWindow("Toy Console", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 64, 64, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("Toy Console", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, pixel_width, pixel_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, pixel_width, pixel_height);
     return 0;
@@ -98,11 +98,11 @@ namespace render{
       index_l = index_byte & 0x0f;
       index_h = (index_byte & 0xf0) >> 4;
       l_color = getPaletteColor(index_l);
-      setPixelWithIndex(i, index_l);
+      setPixelWithIndex((i), index_l);
 
       l_color = getPaletteColor(index_h);
 
-      setPixelWithIndex(i+1, index_h);
+      setPixelWithIndex((i)+1, index_h);
     }
     SDL_UpdateTexture(texture, NULL, pixels, pixel_width * 3);
 

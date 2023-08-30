@@ -11,7 +11,7 @@ void cpu_init(cpu_t* cpu) {
   printf("Initializing x register\n");
   cpu->y = 0x00;
   printf("Initializing y register\n");
-  cpu->sp = 0x00;
+  cpu->sp = 0xff;
   printf("Initializing sp register\n");
   cpu->pc = 0x0000;
   printf("Initializing pc register\n");
@@ -27,7 +27,7 @@ void cpu_init(cpu_t* cpu) {
   printf("Initializing live_debug register\n");
   cpu->clock = 0;
   printf("Initializing clock register\n");
-  cpu->clock_speed = 5;
+  cpu->clock_speed = 50000;
   printf("Initializing clock_speed register\n");
   cpu->memory = (uint8_t*)malloc(0xffff);
   printf("Initializing memory\n");
@@ -38,7 +38,7 @@ void cpu_init(cpu_t* cpu) {
 
 void cpu_tick(cpu_t *cpu) {
   cpu->clock++;
-  //usleep(cpu->clock_speed);
+  // usleep(1);
 }
 
 

@@ -305,6 +305,68 @@ namespace emuops {
         cpu->pc++;
         return 1;
         break;
+      case IN_ORA_IMM: // Logical inclusive or 
+        cpu_tick(cpu);
+        cpu->pc++;
+        cpu_tick(cpu);
+        cpu->acc = cpu->acc | rom[cpu->pc];
+        return 1;
+        break;
+      case IN_ORA_ZPG: // Logical inclusive or 
+        cpu_tick(cpu);
+        cpu->pc++;
+        cpu_tick(cpu);
+        cpu->acc = cpu->acc | memory[rom[cpu->pc]];
+        return 1;
+        break;
+      case IN_ORA_ZPG_X: // Logical inclusive or 
+        cpu_tick(cpu);
+        cpu->pc++;
+        cpu_tick(cpu);
+        cpu->acc = cpu->acc | memory[rom[cpu->pc] + cpu->x];
+        return 1;
+        break;
+      case IN_ORA_ABS: // Logical inclusive or 
+        cpu_tick(cpu);
+        cpu->pc++;
+        cpu_tick(cpu);
+        cpu->acc = cpu->acc | memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8)];
+        cpu_tick(cpu);
+        cpu->pc++;
+        return 1;
+        break;
+      case IN_ORA_ABS_X: // Logical inclusive or 
+        cpu_tick(cpu);
+        cpu->pc++;
+        cpu_tick(cpu);
+        cpu->acc = cpu->acc | memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8) + cpu->x];
+        cpu_tick(cpu);
+        cpu->pc++;
+        return 1;
+        break;
+      case IN_ORA_ABS_Y: // Logical inclusive or 
+        cpu_tick(cpu);
+        cpu->pc++;
+        cpu_tick(cpu);
+        cpu->acc = cpu->acc | memory[rom[cpu->pc] | (rom[cpu->pc + 1] << 8) + cpu->y];
+        cpu_tick(cpu);
+        cpu->pc++;
+        return 1;
+        break;
+      case IN_ORA_IND_X: // Logical inclusive or 
+        cpu_tick(cpu);
+        cpu->pc++;
+        cpu_tick(cpu);
+        cpu->acc = cpu->acc | memory[memory[rom[cpu->pc] + cpu->x] | (memory[rom[cpu->pc] + cpu->x + 1] << 8)];
+        return 1;
+        break;
+      case IN_ORA_IND_Y: // Logical inclusive or 
+        cpu_tick(cpu);
+        cpu->pc++;
+        cpu_tick(cpu);
+        cpu->acc = cpu->acc | memory[memory[rom[cpu->pc]] | (memory[rom[cpu->pc] + 1] << 8) + cpu->y];
+        return 1;
+        break;
     }
     return 0;
   }
